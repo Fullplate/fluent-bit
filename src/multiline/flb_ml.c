@@ -96,7 +96,6 @@ int flb_ml_type_lookup(char *str)
     return type;
 }
 
-// TODO(mh)
 void flb_ml_flush_parser_instance(struct flb_ml *ml,
                                   struct flb_ml_parser_ins *parser_i,
                                   uint64_t stream_id)
@@ -136,6 +135,7 @@ void flb_ml_flush_pending(struct flb_ml *ml, uint64_t now)
     /* iterate group parser instances */
     mk_list_foreach(head, &group->parsers) {
         parser_i = mk_list_entry(head, struct flb_ml_parser_ins, _head);
+        flb_info("[mharmer] flush @ flb_ml_flush_pending");
         flb_ml_flush_parser_instance(ml, parser_i, 0);
     }
 }
@@ -619,12 +619,14 @@ int flb_ml_append(struct flb_ml *ml, uint64_t stream_id,
                 break;
             }
             else {
+                flb_info("[mharmer] flush @ flb_ml_append 1");
                 flb_ml_flush_parser_instance(ml,
                                              lru_parser,
                                              lru_parser->last_stream_id);
             }
         }
         else if (lru_parser && lru_parser->last_stream_id > 0) {
+            flb_info("[mharmer] flush @ flb_ml_append 2");
             flb_ml_flush_parser_instance(ml,
                                          lru_parser,
                                          lru_parser->last_stream_id);
@@ -654,6 +656,7 @@ int flb_ml_append(struct flb_ml *ml, uint64_t stream_id,
 
     if (!processed) {
         if (lru_parser) {
+            flb_info("[mharmer] flush @ flb_ml_append 3");
             flb_ml_flush_parser_instance(ml, lru_parser, stream_id);
             parser_i = lru_parser;
         }
@@ -663,7 +666,7 @@ int flb_ml_append(struct flb_ml *ml, uint64_t stream_id,
                                            struct flb_ml_parser_ins,
                                            _head);
         }
-
+        flb_info("[mharmer] flush @ flb_ml_append 4");
         flb_ml_flush_parser_instance(ml, parser_i, stream_id);
         mst = flb_ml_stream_get(parser_i, stream_id);
         if (!mst) {
@@ -730,13 +733,14 @@ int flb_ml_append_object(struct flb_ml *ml, uint64_t stream_id,
                 break;
             }
             else {
+                flb_info("[mharmer] flush @ flb_ml_append_object 1");
                 flb_ml_flush_parser_instance(ml,
                                              lru_parser,
                                              lru_parser->last_stream_id);
             }
         }
         else if (lru_parser && lru_parser->last_stream_id > 0) {
-            flb_info("[mharmer] interjecting flush?");
+            flb_info("[mharmer] flush @ flb_ml_append_object 2");
             flb_ml_flush_parser_instance(ml,
                                          lru_parser,
                                          lru_parser->last_stream_id);
@@ -766,6 +770,7 @@ int flb_ml_append_object(struct flb_ml *ml, uint64_t stream_id,
 
     if (!processed) {
         if (lru_parser) {
+            flb_info("[mharmer] flush @ flb_ml_append_object 3");
             flb_ml_flush_parser_instance(ml, lru_parser, stream_id);
             parser_i = lru_parser;
         }
@@ -775,7 +780,7 @@ int flb_ml_append_object(struct flb_ml *ml, uint64_t stream_id,
                                            struct flb_ml_parser_ins,
                                            _head);
         }
-
+        flb_info("[mharmer] flush @ flb_ml_append_object 4");
         flb_ml_flush_parser_instance(ml, parser_i, stream_id);
         mst = flb_ml_stream_get(parser_i, stream_id);
         if (!mst) {
