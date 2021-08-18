@@ -626,10 +626,10 @@ int flb_ml_append(struct flb_ml *ml, uint64_t stream_id,
             }
         }
         else if (lru_parser && lru_parser->last_stream_id > 0) {
-            flb_info("[mharmer] flush @ flb_ml_append 2");
-            flb_ml_flush_parser_instance(ml,
-                                         lru_parser,
-                                         lru_parser->last_stream_id);
+            flb_info("[mharmer] flush @ flb_ml_append 2 - SKIPPED");
+            //flb_ml_flush_parser_instance(ml,
+            //                             lru_parser,
+            //                             lru_parser->last_stream_id);
         }
     }
 
