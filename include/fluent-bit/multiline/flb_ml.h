@@ -45,7 +45,7 @@
 #define FLB_ML_TYPE_RECORD      1    /* Fluent Bit msgpack record */
 #define FLB_ML_TYPE_MAP         2    /* msgpack object/map (k/v pairs) */
 
-#define FLB_ML_FLUSH_TIMEOUT    30000 /* Flush timeout default (milliseconds) */
+#define FLB_ML_FLUSH_TIMEOUT    4000 /* Flush timeout default (milliseconds) */
 
 /* Default multiline buffer size: 4Kb */
 #define FLB_ML_BUF_SIZE         1024*4

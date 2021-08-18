@@ -163,7 +163,7 @@ static void cb_ml_flush_timer(struct flb_config *ctx, void *data)
      * which has not flushed in the last N milliseconds.
      */
     // TODO(mh) disabling flush
-    //flb_ml_flush_pending(ml, now);
+    flb_ml_flush_pending(ml, now);
 }
 
 int flb_ml_register_context(struct flb_ml_stream_group *group,
