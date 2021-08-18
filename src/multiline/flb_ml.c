@@ -304,6 +304,7 @@ static int package_content(struct flb_ml_stream *mst,
         }
     }
     else if (type == FLB_ML_EQ) {
+
         if (buf_size == flb_sds_len(parser->match_str) &&
             memcmp(buf_data, parser->match_str, buf_size) == 0) {
             /* EQ match */
@@ -330,9 +331,15 @@ static int package_content(struct flb_ml_stream *mst,
             flb_sds_cat_safe(&stream_group->buf, buf_data, buf_size);
         }
 
+        flb_info("[mharmer] got content, buf_size=%i", buf_size);
+
         /* on ENDSWITH mode, a rule match means flush the content */
         if (rule_match) {
+            flb_info("[mharmer] rule match, flushing");
             flb_ml_flush_stream_group(parser, mst, stream_group);
+        }
+        else {
+            flb_info("[mharmer] no rule match yet");
         }
         processed = FLB_TRUE;
     }
@@ -980,6 +987,8 @@ int flb_ml_flush_stream_group(struct flb_ml_parser *ml_parser,
                 len = flb_sds_len(group->buf);
                 msgpack_pack_str(&mp_pck, len);
                 msgpack_pack_str_body(&mp_pck, group->buf, len);
+
+                flb_info("[mharmer] flushing, len=%i", len);
             }
             else {
                 /* key / val */
