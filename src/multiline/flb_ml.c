@@ -160,7 +160,8 @@ static void cb_ml_flush_timer(struct flb_config *ctx, void *data)
      * Iterate over all streams and groups and for a flush for expired groups
      * which has not flushed in the last N milliseconds.
      */
-    flb_ml_flush_pending(ml, now);
+    // TODO(mh) disabling flush
+    //flb_ml_flush_pending(ml, now);
 }
 
 int flb_ml_register_context(struct flb_ml_stream_group *group,
@@ -724,6 +725,7 @@ int flb_ml_append_object(struct flb_ml *ml, uint64_t stream_id,
             }
         }
         else if (lru_parser && lru_parser->last_stream_id > 0) {
+            // TODO(mh) I think this is the regular flush
             flb_ml_flush_parser_instance(ml,
                                          lru_parser,
                                          lru_parser->last_stream_id);

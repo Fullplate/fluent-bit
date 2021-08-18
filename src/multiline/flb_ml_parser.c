@@ -230,6 +230,8 @@ struct flb_ml_parser_ins *flb_ml_parser_instance_create(struct flb_ml *ml,
         ml->flush_ms = parser->flush_ms;
     }
 
+    flb_info("[multiline] created parser, ml->flush_ms=%i", ml->flush_ms);
+
     return ins;
 }
 
