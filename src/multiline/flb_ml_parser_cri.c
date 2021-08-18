@@ -76,5 +76,7 @@ struct flb_ml_parser *flb_ml_parser_cri(struct flb_config *config)
         return NULL;
     }
 
+    flb_info("[multiline] initialized, FLB_ML_FLUSH_TIMEOUT=%i", FLB_ML_FLUSH_TIMEOUT);
+
     return mlp;
 }
