@@ -96,6 +96,7 @@ int flb_ml_type_lookup(char *str)
     return type;
 }
 
+// TODO(mh)
 void flb_ml_flush_parser_instance(struct flb_ml *ml,
                                   struct flb_ml_parser_ins *parser_i,
                                   uint64_t stream_id)
@@ -114,6 +115,7 @@ void flb_ml_flush_parser_instance(struct flb_ml *ml,
         /* Iterate stream groups */
         mk_list_foreach(head_group, &mst->groups) {
             group = mk_list_entry(head_group, struct flb_ml_stream_group, _head);
+            flb_info("[mharmer] flush @ flb_ml_flush_parser_instance");
             flb_ml_flush_stream_group(parser_i->ml_parser, mst, group);
         }
     }
@@ -197,6 +199,7 @@ static inline void breakline_prepare(struct flb_ml_parser_ins *parser_i,
     }
 }
 
+// TODO(mh)
 /*
  * package content into a multiline stream:
  *
@@ -234,6 +237,7 @@ static int package_content(struct flb_ml_stream *mst,
     }
     else {
         if (mst->last_stream_group != stream_group) {
+            flb_info("[mharmer] flush @ package_content");
             flb_ml_flush_stream_group(parser, mst, mst->last_stream_group);
             mst->last_stream_group = stream_group;
         }
@@ -330,8 +334,6 @@ static int package_content(struct flb_ml_stream *mst,
         else {
             flb_sds_cat_safe(&stream_group->buf, buf_data, buf_size);
         }
-
-        flb_info("[mharmer] got content, buf_size=%i", buf_size);
 
         /* on ENDSWITH mode, a rule match means flush the content */
         if (rule_match) {
@@ -585,6 +587,7 @@ static int ml_append_try_parser(struct flb_ml_parser_ins *parser,
     return 0;
 }
 
+// TODO(mh)
 int flb_ml_append(struct flb_ml *ml, uint64_t stream_id,
                   int type,
                   struct flb_time *tm, void *buf, size_t size)
@@ -672,6 +675,7 @@ int flb_ml_append(struct flb_ml *ml, uint64_t stream_id,
         /* Get stream group */
         st_group = flb_ml_stream_group_get(mst->parser, mst, NULL);
         flb_sds_cat_safe(&st_group->buf, buf, size);
+        flb_info("[mharmer] flush @ flb_ml_append");
         flb_ml_flush_stream_group(parser_i->ml_parser, mst, st_group);
     }
 
@@ -732,7 +736,7 @@ int flb_ml_append_object(struct flb_ml *ml, uint64_t stream_id,
             }
         }
         else if (lru_parser && lru_parser->last_stream_id > 0) {
-            // TODO(mh) I think this is the regular flush
+            flb_info("[mharmer] interjecting flush?");
             flb_ml_flush_parser_instance(ml,
                                          lru_parser,
                                          lru_parser->last_stream_id);
